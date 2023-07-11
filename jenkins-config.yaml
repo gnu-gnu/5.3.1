@@ -96,6 +96,8 @@ security:
     creationOfLegacyTokenEnabled: false
     tokenGenerationOnCreationEnabled: false
     usageStatisticsEnabled: true
+  globaljobdslsecurityconfiguration:
+    useScriptSecurity: true    
   sSHD:
     port: -1
 unclassified:
