@@ -9,25 +9,23 @@ jenkins:
   - kubernetes:
       containerCap: 10
       containerCapStr: "10"
-      jenkinsTunnel: "jenkins-agent:50000"
-      jenkinsUrl: "http://jenkins:80"
-      maxRequestsPerHost: 32
-      maxRequestsPerHostStr: "32"
+      jenkinsTunnel: "jenkins-agent.default.svc.cluster.local:50000"
+      jenkinsUrl: "http://jenkins.default.svc.cluster.local:80"
       name: "kubernetes"
       namespace: "default"
       podLabels:
-      - key: "jenkins/jenkins-jenkins-slave"
+      - key: "jenkins/jenkins-jenkins-agent"
         value: "true"
       serverUrl: "https://kubernetes.default"
       templates:
       - containers:
         - args: "^${computer.jnlpmac} ^${computer.name}"
-          command: ""
+          command: "sleep"
           envVars:
           - envVar:
               key: "JENKINS_URL"
-              value: "http://192.168.1.11"
-          image: "jenkins/inbound-agent:4.3-4"
+              value: "http://jenkins.default.svc.cluster.local:80/"
+          image: "jenkins/inbound-agent:3107.v665000b_51092-15"
           livenessProbe:
             failureThreshold: 0
             initialDelaySeconds: 0
@@ -39,25 +37,29 @@ jenkins:
           resourceLimitMemory: "512Mi"
           resourceRequestCpu: "512m"
           resourceRequestMemory: "512Mi"
-          workingDir: "/home/jenkins"
-        hostNetwork: false
-        label: "jenkins-jenkins-slave "
+          workingDir: "/home/jenkins/agent"
+        id: "c6441dbc474cd880232d3dc2549a297f0c9b8dd592adf21000f4a8f8168d226f"
+        label: "jenkins-jenkins-agent"
         name: "default"
-        nodeUsageMode: NORMAL
+        namespace: "default"
+        nodeUsageMode: "NORMAL"
         podRetention: "never"
-        runAsGroup: "993"
-        runAsUser: "1000"
-        serviceAccount: "jenkins"
+        serviceAccount: "default"
+        slaveConnectTimeout: 100
+        slaveConnectTimeoutStr: "100"
         volumes:
         - hostPathVolume:
             hostPath: "/usr/bin/kubectl"
             mountPath: "/usr/bin/kubectl"
+            readOnly: false
         - hostPathVolume:
-            hostPath: "/bin/docker"
-            mountPath: "/bin/docker"
+            hostPath: "/usr/bin/docker"
+            mountPath: "/usr/bin/docker"
+            readOnly: false
         - hostPathVolume:
             hostPath: "/var/run/docker.sock"
             mountPath: "/var/run/docker.sock"
+            readOnly: false
         yamlMergeStrategy: "override"
   crumbIssuer:
     standard:
@@ -66,9 +68,10 @@ jenkins:
   disabledAdministrativeMonitors:
   - "hudson.model.UpdateCenter$CoreUpdateMonitor"
   - "jenkins.diagnostics.RootUrlNotSetMonitor"
-  - "jenkins.security.UpdateSiteWarningsMonitor"  
+  - "jenkins.security.UpdateSiteWarningsMonitor"
   labelAtoms:
-  - name: "master"
+  - name: "built-in"
+  - name: "jenkins-jenkins-agent"
   markupFormatter: "plainText"
   mode: NORMAL
   myViewsTabBar: "standard"
@@ -78,7 +81,24 @@ jenkins:
       name: "all"
   projectNamingStrategy: "standard"
   quietPeriod: 5
+  remotingSecurity:
+    enabled: true
   scmCheckoutRetryCount: 0
+  securityRealm:
+    local:
+      allowsSignup: false
+      enableCaptcha: false
+      users:
+      - id: "admin"
+        name: "Jenkins Admin"
+        properties:
+        - "apiToken"
+        - "mailer"
+        - "myView"
+        - preferredProvider:
+            providerId: "default"
+        - "timezone"
+        - "experimentalFlags"
   slaveAgentPort: 50000
   updateCenter:
     sites:
@@ -88,11 +108,20 @@ jenkins:
   - all:
       name: "all"
   viewsTabBar: "standard"
+globalCredentialsConfiguration:
+  configuration:
+    providerFilter: "none"
+    typeFilter: "none"
 security:
   apiToken:
     creationOfLegacyTokenEnabled: false
     tokenGenerationOnCreationEnabled: false
     usageStatisticsEnabled: true
+  gitHooks:
+    allowedOnAgents: false
+    allowedOnController: false
+  gitHostKeyVerificationConfiguration:
+    sshHostKeyVerificationStrategy: "knownHostsFileVerificationStrategy"
 unclassified:
   buildDiscarders:
     configuredBuildDiscarders:
@@ -100,20 +129,28 @@ unclassified:
   fingerprints:
     fingerprintCleanupDisabled: false
     storage: "file"
-  gitSCM:
-    createAccountBasedOnEmail: false
-    showEntireCommitSummaryInChanges: false
-    useExistingAccountWithSameEmail: false
   location:
     adminAddress: "address not configured yet <nobody@nowhere>"
+    url: "http://192.168.1.11/"
   mailer:
     charset: "UTF-8"
     useSsl: false
     useTls: false
   pollSCM:
     pollingThreadCount: 10
+  scmGit:
+    addGitTagAction: false
+    allowSecondFetch: false
+    createAccountBasedOnEmail: false
+    disableGitToolChooser: false
+    hideCredentials: false
+    showEntireCommitSummaryInChanges: false
+    useExistingAccountWithSameEmail: false
 tool:
   git:
     installations:
     - home: "git"
       name: "Default"
+  mavenGlobalConfig:
+    globalSettingsProvider: "standard"
+    settingsProvider: "standard
