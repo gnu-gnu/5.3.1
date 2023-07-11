@@ -153,4 +153,4 @@ tool:
       name: "Default"
   mavenGlobalConfig:
     globalSettingsProvider: "standard"
-    settingsProvider: "standard
+    settingsProvider: "standard"
