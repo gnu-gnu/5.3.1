@@ -79,7 +79,6 @@ jenkins:
   projectNamingStrategy: "standard"
   quietPeriod: 5
   scmCheckoutRetryCount: 0
-  securityRealm: "legacy"
   slaveAgentPort: 50000
   updateCenter:
     sites:
