@@ -86,11 +86,12 @@ jenkins:
   scmCheckoutRetryCount: 0
   securityRealm:
     local:
+    
       allowsSignup: false
       enableCaptcha: false
       users:
       - id: "admin"
-        name: "Jenkins Admin"
+        password: "admin"
         properties:
         - "apiToken"
         - "mailer"
