@@ -44,7 +44,7 @@ jenkins:
         namespace: "default"
         nodeUsageMode: "NORMAL"
         podRetention: "never"
-        serviceAccount: "default"
+        serviceAccount: "jenkins"
         slaveConnectTimeout: 100
         slaveConnectTimeoutStr: "100"
         volumes:
