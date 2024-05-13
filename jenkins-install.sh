@@ -14,7 +14,8 @@ helm install jenkins jenkins/jenkins \
 --set controller.tolerations[0].operator=Exists \
 --set controller.runAsUser=1000 \
 --set controller.runAsGroup=1000 \
---set controller.tag=2.401.2-jdk11 \
+--set controller.image=docker.io/jenkins/jenkins
+--set controller.tag=2.440.3-jdk17 \
 --set controller.serviceType=LoadBalancer \
 --set controller.servicePort=80 \
 --set controller.jenkinsOpts="$jkopt1 $jkopt2" \
