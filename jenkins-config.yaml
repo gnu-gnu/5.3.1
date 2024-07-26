@@ -43,7 +43,7 @@ jenkins:
         namespace: "ci-cd"
         nodeUsageMode: NORMAL
         podRetention: "never"
-        runAsGroup: "994"
+        runAsGroup: "995"
         runAsUser: "1000"
         serviceAccount: "jenkins"
         slaveConnectTimeout: 100
